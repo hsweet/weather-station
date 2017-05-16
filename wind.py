@@ -1,7 +1,6 @@
 import  RPi.GPIO as GPIO
 import time
 import datetime
-import random
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(23, GPIO.IN,pull_up_down=GPIO.PUD_UP)
