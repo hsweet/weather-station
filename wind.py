@@ -8,7 +8,6 @@ GPIO.setup(23, GPIO.IN,pull_up_down=GPIO.PUD_UP)
 def wind(cycles):
     start = time.time()
     for pulses in range(cycles):
-        time.sleep(random.randrange(0,3))
         GPIO.wait_for_edge(23, GPIO.RISING)  #Rising or falling edge give different results!
         # print (pulses)           # show the count
     duration = time.time() - start      # how long it took to count n cycles
