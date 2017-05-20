@@ -30,7 +30,7 @@ while True:
 
     #           Check for new day, save daily rainfall total
     today = datetime.datetime.now()
-    next_day = is_new_day(today.day)
+    next_day = is_new_day(str(today.month) + str(today.day))
     if next_day == True:
         
         #       add daily total to daily rain log
