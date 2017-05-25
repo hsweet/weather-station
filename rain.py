@@ -20,9 +20,10 @@ def daily_rainfall():
     new_day = str(now.year) + str(now.month) + str(now.day)   #will change after midnight
     current_day, most_rain = 0, 0
     while True:
+        global rainfall
         now = datetime.datetime.now()
-        #new_day = now.minute                    # for testing .. changes each minute
-        new_day = str(now.year) + str(now.month) + str(now.day)   #will change after midnight
+        new_day = now.minute                    # for testing .. changes each minute
+        #new_day = str(now.year) + str(now.month) + str(now.day)   #will change after midnight
         
         if rainfall > most_rain:
             most_rain = rainfall
@@ -30,16 +31,17 @@ def daily_rainfall():
         
         if current_day != new_day:              # it's a new day
             current_day = new_day
+            rainfall = 0                        # won't be reset by rain guage unless rain at midnight!
+            # could step on other function if raining at midnight
             
             print ('Total rainfall for {}-{}-{} is {}'.format (now.month, now.day,now.year, most_rain))
             try:
                 log = open('dailyrain.log' , 'a')
-                log.write('{} {:.2f}\n'.format(datetime.datetime.now().strftime("%Y-%m-%d"), most_rain))
+                log.write('{} {:.2f}\n'.format(datetime.datetime.now().strftime("%Y-%m-%d-%H:%M:%S"), most_rain))
                 log.close()
             except:
                 print ('Cannot write to daily log file')
             most_rain = 0            # reset daily
-            # time.sleep(10)
         else:
             time.sleep(60)
             print ('Waking up, it is still today, going back to sleep')
@@ -62,20 +64,21 @@ def read_rain_guage():
         inputValue = 0              # for testing only
 
         global rainfall
+        ####################  Reset at Midnight #####################
+        # should happen before guage is read to insure reading is reset 
+        # next rain day
+        now = datetime.datetime.now()
+        #new_day = str(now.year) + str(now.month) + str(now.day)   #will change after midnight
+        new_day = now.hour           # for faster testing
+        if current_day != new_day:
+            current_day = new_day
+            x = 0
         ####################### Measure Rainfall ######################     
         if (inputValue == False):
             x = x + 1
             rainfall = x * 0.011
             print (round(rainfall,4))
-        time.sleep(600)               # remove after testing
-
-        ####################  Reset at Midnight #####################
-        now = datetime.datetime.now()
-        new_day = str(now.year) + str(now.month) + str(now.day)   #will change after midnight
-        # day = now.minute           # for faster testing
-        if current_day != new_day:
-            current_day = new_day
-            x = 0
+        time.sleep(6)               # remove after testing
         ##################### write to log file ######################
         try:
             log = open('rain.log', 'a')
