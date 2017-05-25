@@ -1,5 +1,5 @@
-#set terminal pngcairo transparent truecolor size 800,640 enhanced font "Times,16" 
-#set output 'windlog.png'
+set terminal pngcairo transparent truecolor size 800,640 enhanced font "Times,16" 
+set output '/var/www/html/windlog.png'
 # set timestamp
 set grid
 set linetype 2 lw 4 lc rgb "blue" pointtype 6
@@ -12,6 +12,4 @@ set timefmt x "%Y-%m-%d-%H:%M:%S"
 set format x "%H:%M\n%m/%d/"
 set xlabel "Time"
 set ylabel "Speed"
-#plot "windlog.txt" using 1:3 title "Average Speed" with lines, "windlog.txt" using 1:2 title "Instananeous Speed" with lines
-plot "windlog.txt" using 1:2 title "Miles Per Hour" with lines, "windlog.txt" using 1:3 title "Average Speed "with lines
- 
+plot "/var/www/html/windlog.txt" using 1:2 title "Miles Per Hour" with lines, "/var/www/html/windlog.txt" using 1:3 title "Average Speed "with lines"
