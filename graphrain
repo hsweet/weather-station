@@ -1,0 +1,17 @@
+#!/usr/bin/gnuplot -persist
+#  Explicit paths for cron!
+reset
+set terminal pngcairo transparent truecolor size 800,640 enhanced font "Times,16" 
+set output "/home/harry/Desktop/rain.png"
+# set timestamp
+set grid
+set linetype 1 lw 4 lc rgb "blue" pointtype 6
+#set linetype 2 lw 2 lc rgb "green" pointtype 16
+set title "Daily Rainfall\nThe Birch School"
+set xdata time
+set timefmt x "%Y-%m-%d-%H:%M:%S"
+set format x "%m/%d/%y"
+set xlabel "Date"
+set ylabel " Total Precipitation
+plot "/home/harry/bin/python/birch/weather/weather_station/dailyrain.log" using 1:2 notitle  with impulses
+ 
