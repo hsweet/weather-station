@@ -5,8 +5,9 @@ import datetime
 
 #GPIO.setmode(GPIO.BCM)
 #GPIO.setup(12, GPIO.IN,pull_up_down=GPIO.PUD_UP)
- 
-rainfall = 0 
+
+starting = True   # Don't write to log at startup
+rainfall = 0
 
 def daily_rainfall():
     '''            Total daily rainfall log
@@ -17,35 +18,39 @@ def daily_rainfall():
     not active, which is true when there is no rain
     '''
     now = datetime.datetime.now()
-    new_day = str(now.year) + str(now.month) + str(now.day)   #will change after midnight
-    current_day, most_rain = 0, 0
+    new_day = str(now.year) + str(now.month) + str(now.day)   #changes ay midnight
+    current_day, total_daily_rain = 0, 0
+    
     while True:
-        global rainfall
+        global rainfall, starting
         now = datetime.datetime.now()
-        new_day = now.minute                    # for testing .. changes each minute
-        #new_day = str(now.year) + str(now.month) + str(now.day)   #will change after midnight
+        # new_day = now.minute                    # for testing .. changes each minute
+        new_day = str(now.year) + str(now.month) + str(now.day)   # midnight
         
-        if rainfall > most_rain:
-            most_rain = rainfall
-        print ("Rainfall is {},total accumulation {}".format(rainfall, most_rain))
+        if rainfall > total_daily_rain:
+            total_daily_rain = rainfall
+        print ("Rainfall is {},total accumulation {}".format(rainfall, total_daily_rain))
         
-        if current_day != new_day:              # it's a new day
+        if current_day != new_day and starting == False:              # Program already running @ midnight
+            print ('It is a new day')
             current_day = new_day
             rainfall = 0                        # won't be reset by rain guage unless rain at midnight!
-            # could step on other function if raining at midnight
+            # but could be a concurency issue if it is raining and the other thread is trying to write
+            # the rainfall amount at the same time this as this thread 
             
-            print ('Total rainfall for {}-{}-{} is {}'.format (now.month, now.day,now.year, most_rain))
+            print ('Total rainfall for {}-{}-{} is {}'.format (now.month, now.day,now.year, total_daily_rain))
             try:
                 log = open('dailyrain.log' , 'a')
-                log.write('{} {:.2f}\n'.format(datetime.datetime.now().strftime("%Y-%m-%d-%H:%M:%S"), most_rain))
+                log.write('{} {:.2f}\n'.format(datetime.datetime.now().strftime("%Y-%m-%d-%H:%M:%S"), total_daily_rain))
                 log.close()
             except:
                 print ('Cannot write to daily log file')
-            most_rain = 0            # reset daily
+            total_daily_rain = 0            # reset daily
         else:
             time.sleep(60)
             print ('Waking up, it is still today, going back to sleep')
-
+            
+        starting = False                             # program is already running
 
 def read_rain_guage():
     '''Read rain guage, write aculmulating log during a rain
@@ -62,14 +67,14 @@ def read_rain_guage():
         #inputValue = GPIO.input(12)                        #poll  or
         #inputValue = GPIO.wait_for_edge(12, GPIO.RISING)   #interupt
         inputValue = 0              # for testing only
-
         global rainfall
+        
         ####################  Reset at Midnight #####################
         # should happen before guage is read to insure reading is reset 
         # next rain day
         now = datetime.datetime.now()
-        #new_day = str(now.year) + str(now.month) + str(now.day)   #will change after midnight
-        new_day = now.hour           # for faster testing
+        new_day = str(now.year) + str(now.month) + str(now.day)# midnight
+        #new_day = now.minute           # for faster testing
         if current_day != new_day:
             current_day = new_day
             x = 0
@@ -78,7 +83,7 @@ def read_rain_guage():
             x = x + 1
             rainfall = x * 0.011
             print (round(rainfall,4))
-        time.sleep(6)               # remove after testing
+        time.sleep(1200)               # remove after testing
         ##################### write to log file ######################
         try:
             log = open('rain.log', 'a')
