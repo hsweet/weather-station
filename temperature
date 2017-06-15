@@ -1,0 +1,24 @@
+from w1thermsensor import W1ThermSensor
+
+sensor = W1ThermSensor()
+temperature_in_celsius = sensor.get_temperature()
+temperature_in_fahrenheit = sensor.get_temperature(W1ThermSensor.DEGREES_F)
+temperature_in_all_units = sensor.get_temperatures([
+    W1ThermSensor.DEGREES_C,
+    W1ThermSensor.DEGREES_F,
+    W1ThermSensor.KELVIN])
+print (temperature_in_all_units)
+
+''' Resourses
+
+https://learn.adafruit.com/adafruits-raspberry-pi-lesson-11-ds18b20-temperature-sensing
+
+Python module used to read sensor
+https://github.com/timofurrer/ds18b20 (http://adafru.it/dpK) (written by Timo!)
+
+sudo apt-get install python-w1thermsensor
+
+Or  python 3:
+
+sudo apt-get install python3-w1thermsensor
+'''
