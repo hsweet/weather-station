@@ -1,4 +1,4 @@
- import  RPi.GPIO as GPIO
+import  RPi.GPIO as GPIO
 import time
 import datetime
 
@@ -23,7 +23,7 @@ while True:
     
     wind_speed = (wind(10))
     recent_speeds.append(wind_speed)            # save readings in a list
-    print (recent_speeds)
+    # print (recent_speeds)
     raw_avg = (sum(recent_speeds)/len(recent_speeds))
     avg = format (raw_avg,'.2f')
     raw_fastest = max(recent_speeds)
