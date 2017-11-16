@@ -25,7 +25,7 @@ while True:
     if (inputValue == False):
         x=x+1
         rainfall=x*0.011
-        print (rainfall)
+        # print (rainfall)
     time.sleep(1)
 
     #           Check for new day, save daily rainfall total
@@ -34,7 +34,7 @@ while True:
     if next_day == True:
         
         #       add daily total to daily rain log
-        print ('Total rainfall for {}-{}-{} is {}'.format (today.month, today.day,today.year, rainfall))
+        # print ('Total rainfall for {}-{}-{} is {}'.format (today.month, today.day,today.year, rainfall))
         try:
             log = open('dailyrain.log' , 'a')
             log.write('{} {:.2f}\n'.format(datetime.datetime.now().strftime("%Y-%m-%d"), rainfall))
